@@ -1,12 +1,15 @@
-import { GoogleLogin } from "@react-oauth/google";
+import { useState } from "react";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { loginWithGoogle } from "../../api/auth.service";
 import useAuth from "../../hooks/useAuth";
 
-const GoogleLoginButton = ({ onSuccessRedirect, onError }) => {
+const GoogleLoginButton = ({ onSuccessRedirect, onError, buttonText = "Continue with Google", className = "" }) => {
   const { setAuthSession } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
+      setLoading(true);
       const googleToken = credentialResponse.credential;
 
       if (!googleToken) {
@@ -28,16 +31,24 @@ const GoogleLoginButton = ({ onSuccessRedirect, onError }) => {
       if (onError) {
         onError(message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${className}`}>
       <GoogleLogin
         onSuccess={handleGoogleSuccess}
         onError={() => {
-          if (onError) onError("Google sign-in failed");
+          if (onError) onError("Google sign-in failed. Please try again.");
         }}
+        theme="outline"
+        size="large"
+        shape="rectangular"
+        width="100%"
+        text="continue_with"
+        logo_alignment="center"
       />
     </div>
   );

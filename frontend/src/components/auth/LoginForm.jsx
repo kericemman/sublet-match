@@ -179,7 +179,7 @@ const LoginForm = ({ onSuccessRedirect }) => {
       <div className="text-center mt-4">
         <p className="text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link to="/register" className="text-[#3BC0E9] hover:underline font-medium">
+          <Link to="/landlord/register" className="text-[#3BC0E9] hover:underline font-medium">
             Create an account
           </Link>
         </p>

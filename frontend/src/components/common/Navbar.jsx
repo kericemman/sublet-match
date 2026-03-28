@@ -187,7 +187,7 @@ const Navbar = () => {
             Listings
           </Link>
           <Link
-            to="/blog"
+            to="/blogs"
             onClick={closeMobileMenu}
             className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#3BC0E9] hover:bg-gray-50 rounded-lg transition-colors"
           >
@@ -209,7 +209,7 @@ const Navbar = () => {
                   onClick={closeMobileMenu}
                   className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#3BC0E9] hover:bg-gray-50 rounded-lg transition-colors"
                 >
-                  Landlord Login
+                  Login
                 </Link>
                 <Link
                   to="/landlord/register"
