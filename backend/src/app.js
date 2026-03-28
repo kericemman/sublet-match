@@ -22,12 +22,23 @@ const env = require("./config/env");
 
 const app = express();
 
+const allowedOrigins = [
+  "https://subletmatch.com",
+  "https://www.subletmatch.com",
+];
+
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
+
 
 app.use(helmet());
 app.use(morgan("dev"));
