@@ -23,8 +23,9 @@ const env = require("./config/env");
 const app = express();
 
 const allowedOrigins = [
-  "https://subletmatch.com",
-  "https://www.subletmatch.com",
+    "https://subletmatch.com",
+    "https://www.subletmatch.com",
+    "http://localhost:5173",
 ];
 
 app.use(

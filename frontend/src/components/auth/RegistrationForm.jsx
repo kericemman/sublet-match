@@ -250,14 +250,11 @@ const RegisterForm = ({ onSuccessRedirect }) => {
           className="mt-1 h-4 w-4 text-[#3BC0E9] border-gray-300 rounded focus:ring-[#3BC0E9]"
         />
         <label className="ml-2 text-sm text-gray-600">
-          I agree to the{' '}
+          Click here to I agree to the{' '}
           <a href="/terms" className="text-[#3BC0E9] hover:underline font-medium">
             Terms of Service
-          </a>{' '}
-          and{' '}
-          <a href="/privacy" className="text-[#3BC0E9] hover:underline font-medium">
-            Privacy Policy
           </a>
+          
         </label>
       </div>
       {errors.terms && (
@@ -286,7 +283,7 @@ const RegisterForm = ({ onSuccessRedirect }) => {
             Creating account...
           </span>
         ) : (
-          "Create Landlord Account"
+          "Create Account"
         )}
       </button>
     </form>

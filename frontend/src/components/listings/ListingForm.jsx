@@ -10,7 +10,6 @@ const ListingForm = ({
 }) => {
   const [images, setImages] = useState(initialValues?.images || []);
   const [serverError, setServerError] = useState("");
-  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const {
     register,
@@ -74,14 +73,14 @@ const ListingForm = ({
     const currentTags = watch("lifestyleTags") || [];
 
     if (currentTags.includes(tag)) {
-        setValue(
+      setValue(
         "lifestyleTags",
         currentTags.filter((t) => t !== tag)
-        );
+      );
     } else {
-        setValue("lifestyleTags", [...currentTags, tag]);
+      setValue("lifestyleTags", [...currentTags, tag]);
     }
-    };
+  };
 
   const submitHandler = async (values) => {
     setServerError("");
@@ -262,102 +261,85 @@ const ListingForm = ({
         </div>
       </div>
 
-      {/* Advanced Options Toggle */}
-      <button
-        type="button"
-        onClick={() => setShowAdvanced(!showAdvanced)}
-        className="flex items-center text-sm text-[#3BC0E9] hover:text-blue-700 transition-colors"
-      >
-        <svg className={`w-4 h-4 mr-1 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-        </svg>
-        {showAdvanced ? "Hide advanced options" : "Show advanced options"}
-      </button>
-
-      {/* Advanced Options */}
-      {showAdvanced && (
-        <>
-          {/* Rooms & Amenities */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-[#242B38] mb-4">Rooms & Amenities</h2>
-            <div className="grid gap-6 md:grid-cols-3">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Bedrooms
-                </label>
-                <input
-                  type="number"
-                  {...register("bedrooms")}
-                  min="0"
-                  step="1"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
-                  placeholder="Number of bedrooms"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Bathrooms
-                </label>
-                <input
-                  type="number"
-                  {...register("bathrooms")}
-                  min="0"
-                  step="0.5"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
-                  placeholder="Number of bathrooms"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Square Feet
-                </label>
-                <input
-                  type="number"
-                  {...register("squareFeet")}
-                  min="0"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
-                  placeholder="Square footage"
-                />
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <label className="flex items-center gap-2 text-sm text-gray-700">
-                <input type="checkbox" {...register("parking")} className="w-4 h-4 text-[#3BC0E9] rounded" />
-                Parking Available
-              </label>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
-                <input type="checkbox" {...register("petsAllowed")} className="w-4 h-4 text-[#3BC0E9] rounded" />
-                Pets Allowed
-              </label>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
-                <input type="checkbox" {...register("furnished")} className="w-4 h-4 text-[#3BC0E9] rounded" />
-                Fully Furnished
-              </label>
-            </div>
+      {/* Rooms & Amenities */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-[#242B38] mb-4">Rooms & Amenities</h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Bedrooms
+            </label>
+            <input
+              type="number"
+              {...register("bedrooms")}
+              min="0"
+              step="1"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
+              placeholder="Number of bedrooms"
+            />
           </div>
 
-          {/* Lifestyle Tags */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-[#242B38] mb-4">Lifestyle Tags</h2>
-            <div className="flex flex-wrap gap-4">
-              {["sober", "bipoc", "lgbtq_friendly", "students", "professionals", "families"].map((tag) => (
-                <label key={tag} className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={lifestyleTags.includes(tag)}
-                    onChange={() => handleTagToggle(tag)}
-                    className="w-4 h-4 text-[#3BC0E9] rounded"
-                  />
-                  {tag.replace(/_/g, ' ').toUpperCase()}
-                </label>
-              ))}
-            </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Bathrooms
+            </label>
+            <input
+              type="number"
+              {...register("bathrooms")}
+              min="0"
+              step="0.5"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
+              placeholder="Number of bathrooms"
+            />
           </div>
-        </>
-      )}
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Square Feet
+            </label>
+            <input
+              type="number"
+              {...register("squareFeet")}
+              min="0"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
+              placeholder="Square footage"
+            />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input type="checkbox" {...register("parking")} className="w-4 h-4 text-[#3BC0E9] rounded" />
+            Parking Available
+          </label>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input type="checkbox" {...register("petsAllowed")} className="w-4 h-4 text-[#3BC0E9] rounded" />
+            Pets Allowed
+          </label>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input type="checkbox" {...register("furnished")} className="w-4 h-4 text-[#3BC0E9] rounded" />
+            Fully Furnished
+          </label>
+        </div>
+      </div>
+
+      {/* Lifestyle Tags */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-[#242B38] mb-4">Lifestyle Tags</h2>
+        <div className="flex flex-wrap gap-4">
+          {["sober", "bipoc", "lgbtq_friendly", "students", "professionals", "families"].map((tag) => (
+            <label key={tag} className="flex items-center gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={lifestyleTags.includes(tag)}
+                onChange={() => handleTagToggle(tag)}
+                className="w-4 h-4 text-[#3BC0E9] rounded"
+              />
+              {tag.replace(/_/g, ' ').toUpperCase()}
+            </label>
+          ))}
+        </div>
+      </div>
 
       {/* Description */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">

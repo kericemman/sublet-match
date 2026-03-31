@@ -89,7 +89,7 @@ const Navbar = () => {
                   to="/landlord/register"
                   className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#3BC0E9] to-[#95BDCB] rounded-lg hover:shadow-md transition-all"
                 >
-                  Start Listing
+                  Post Your Apartment
                 </Link>
               </>
             ) : null}
@@ -216,7 +216,7 @@ const Navbar = () => {
                   onClick={closeMobileMenu}
                   className="block mt-2 px-4 py-2 text-center text-base font-medium text-white bg-gradient-to-r from-[#3BC0E9] to-[#95BDCB] rounded-lg hover:shadow-md transition-all"
                 >
-                  Start Listing
+                  Post Your Apartment
                 </Link>
               </>
             ) : null}

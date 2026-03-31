@@ -79,8 +79,7 @@ const Hero = () => {
 
             {/* Description */}
             <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              A curated marketplace for interns and young professionals. 
-              We provide a seamless experience for finding and renting short-term homes.
+              Built for interns and youg professionals moving to NYC. Find short-term housing without hustle. Choose from a variety of listings and book your stay in minutes.
             </p>
 
             {/* Stats */}
@@ -117,7 +116,7 @@ const Hero = () => {
                 to="/register"
                 className="px-8 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-lg font-medium hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
               >
-                List Your Space
+                Post Apartment Now
               </Link>
             </div>
           </div>

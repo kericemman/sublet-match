@@ -6,10 +6,6 @@ const upload = require("../../middlewares/upload.middleware");
 
 const router = express.Router();
 
-/**
- * Single image upload
- * Admin or landlord
- */
 router.post(
   "/single",
   authMiddleware,
@@ -18,10 +14,6 @@ router.post(
   uploadController.uploadSingleImage
 );
 
-/**
- * Multiple image upload
- * Landlord mainly for listings
- */
 router.post(
   "/multiple",
   authMiddleware,

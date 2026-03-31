@@ -81,7 +81,7 @@ const LandlordLayout = () => {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#3BC0E9] to-[#95BDCB] flex items-center justify-center mr-2">
             <span className="text-white font-bold text-sm">L</span>
           </div>
-          <span className="font-bold text-[#242B38]">Landlord Portal</span>
+          <span className="font-bold text-[#242B38]">Listing Portal</span>
         </div>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -116,7 +116,7 @@ const LandlordLayout = () => {
               </div>
               <div>
                 <h2 className="text-xl font-bold">SubletMatch</h2>
-                <p className="text-xs text-white/60">Landlord Portal</p>
+                <p className="text-xs text-white/60">Listing Portal</p>
               </div>
             </div>
           </div>

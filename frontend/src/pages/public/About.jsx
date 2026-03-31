@@ -153,7 +153,7 @@ export default function AboutPage() {
                     Browse Sublets
                   </Link>
                   <Link
-                    to="/register"
+                    to="/landlord/register"
                     className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:border-[#3BC0E9] hover:text-[#3BC0E9] transition-all"
                   >
                     List Your Apartments

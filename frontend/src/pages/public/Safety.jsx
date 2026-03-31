@@ -47,26 +47,6 @@ export default function SafetyTips() {
       title: "Get Everything in Writing",
       description: "Ensure you have a written lease agreement that clearly states the rental period, monthly rent, security deposit, and any house rules. Keep copies of all communications.",
       color: "purple"
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-      ),
-      title: "Use Secure Payment Methods",
-      description: "Avoid cash payments or wire transfers. Use traceable methods like checks, bank transfers, or secure payment platforms that offer buyer protection.",
-      color: "red"
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-      ),
-      title: "Communicate Through the Platform",
-      description: "Keep all communication within SubletMatch's messaging system. This helps us monitor for suspicious activity and provides a record of your conversations.",
-      color: "teal"
     }
   ];
 
@@ -258,18 +238,7 @@ export default function SafetyTips() {
           </p>
         </div>
 
-        {/* Report Button */}
-        <div className="mt-8 text-center">
-          <Link
-            to="/report"
-            className="inline-flex items-center px-6 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors border border-red-200"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.342 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-            Report Suspicious Activity
-          </Link>
-        </div>
+        
       </div>
     </div>
   );

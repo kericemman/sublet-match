@@ -114,7 +114,7 @@ const LandlordDashboardPage = () => {
             Welcome Back
           </span>
         </div>
-        <h1 className="text-3xl font-bold text-[#242B38]">Landlord Dashboard</h1>
+        <h1 className="text-3xl font-bold text-[#242B38]">Listing Dashboard</h1>
         <p className="mt-2 text-gray-600">
           Manage your listings and keep track of incoming inquiries.
         </p>
