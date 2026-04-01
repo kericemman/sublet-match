@@ -22,10 +22,13 @@ const env = require("./config/env");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 const allowedOrigins = [
-    "https://subletmatch.com",
-    "https://www.subletmatch.com",
-    "http://localhost:5173",
+  "http://localhost:5173",
+  "https://subletmatch.com",
+  "https://www.subletmatch.com",
+  "https://info.subletmatch.com",
 ];
 
 app.use(
@@ -39,7 +42,6 @@ app.use(
     credentials: true,
   })
 );
-
 
 app.use(helmet());
 app.use(morgan("dev"));
