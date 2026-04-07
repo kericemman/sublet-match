@@ -66,11 +66,11 @@ const Footer = () => {
               </li>
               
               
-              <li>
+              {/* <li>
                 <Link to="/blogs" className="text-white/60 hover:text-white transition-colors text-sm">
                   Resources
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
