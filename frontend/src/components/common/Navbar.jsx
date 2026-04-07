@@ -186,13 +186,13 @@ const Navbar = () => {
           >
             Listings
           </Link>
-          <Link
+          {/* <Link
             to="/blogs"
             onClick={closeMobileMenu}
             className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#3BC0E9] hover:bg-gray-50 rounded-lg transition-colors"
           >
             Blog
-          </Link>
+          </Link> */}
           <Link
             to="/about"
             onClick={closeMobileMenu}
