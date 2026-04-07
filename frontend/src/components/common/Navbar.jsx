@@ -53,7 +53,7 @@ const Navbar = () => {
             >
               Listings
             </Link>
-            <Link
+            {/* <Link
               to="/blogs"
               className={`text-sm font-medium transition-colors ${
                 isActive('/blog') 
@@ -62,7 +62,7 @@ const Navbar = () => {
               }`}
             >
               Blog
-            </Link>
+            </Link> */}
             <Link
               to="/about"
               className={`text-sm font-medium transition-colors ${
