@@ -5,6 +5,7 @@ import ListingFilters from "../../components/listings/ListingFilter";
 import Loader from "../../components/common/Loader";
 import EmptyState from "../../components/common/EmptyState";
 
+
 const defaultFilters = {
   location: "",
   propertyType: "",
@@ -26,6 +27,7 @@ const ListingsPage = () => {
   const [activeFilterCount, setActiveFilterCount] = useState(0);
   const [sortBy, setSortBy] = useState("newest");
   const [viewMode, setViewMode] = useState("grid");
+
 
   const fetchListings = async (params = {}) => {
     try {
@@ -76,8 +78,11 @@ const ListingsPage = () => {
     setSortBy(e.target.value);
   };
 
+ 
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+     
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-white via-blue-50 to-[#95BDCB]/20 py-12 border-b border-[#95BDCB]/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,11 +232,15 @@ const ListingsPage = () => {
                   </button>
                 </div>
               </div>
+              
             )}
+            
           </>
+          
         )}
       </div>
     </div>
+    
   );
 };
 

@@ -1,18 +1,108 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getPublishedBlogBySlug } from "../../api/blog.service";
+import { getPublishedBlogBySlug, getPublishedBlogs } from "../../api/blog.service";
 import Loader from "../../components/common/Loader";
 import NewsletterSignup from "../../components/home/NewsletterSignup";
 
 const BlogDetailsPage = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [serverError, setServerError] = useState("");
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [tableOfContents, setTableOfContents] = useState([]);
+  const [activeHeading, setActiveHeading] = useState("");
+
+  // Extract headings from content for table of contents
+  useEffect(() => {
+    if (blog?.content) {
+      // Decode HTML entities first
+      const decodedContent = decodeHtml(blog.content);
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(decodedContent, 'text/html');
+      const headings = doc.querySelectorAll('h1, h2, h3');
+      const toc = Array.from(headings).map((heading, index) => ({
+        id: `heading-${index}`,
+        text: heading.textContent,
+        level: parseInt(heading.tagName[1]),
+      }));
+      setTableOfContents(toc);
+    }
+  }, [blog?.content]);
+
+  // Scroll spy for active heading
+  useEffect(() => {
+    const handleScroll = () => {
+      const headings = document.querySelectorAll('.blog-content h1, .blog-content h2, .blog-content h3');
+      let current = '';
+      headings.forEach((heading) => {
+        const rect = heading.getBoundingClientRect();
+        if (rect.top <= 100) {
+          current = heading.id;
+        }
+      });
+      setActiveHeading(current);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [blog]);
+
+  // Function to decode HTML entities
+  const decodeHtml = (html) => {
+    if (!html) return '';
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
+  // Function to properly render HTML content
+  const createMarkup = (htmlContent) => {
+    if (!htmlContent) return { __html: '' };
+    
+    // First decode any HTML entities
+    let decoded = decodeHtml(htmlContent);
+    
+    // Add IDs to headings for table of contents
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = decoded;
+    const headings = tempDiv.querySelectorAll('h1, h2, h3');
+    headings.forEach((heading, index) => {
+      heading.id = `heading-${index}`;
+    });
+    
+    return { __html: tempDiv.innerHTML };
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const calculateReadTime = (content) => {
+    if (!content) return "3 min read";
+    // Decode first to get accurate word count
+    const decoded = decodeHtml(content);
+    const text = decoded.replace(/<[^>]*>/g, '');
+    const words = text.trim().split(/\s+/).length;
+    const minutes = Math.ceil(words / 200);
+    return `${minutes} min read`;
+  };
+
+  const scrollToHeading = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -21,6 +111,10 @@ const BlogDetailsPage = () => {
         setServerError("");
 
         const response = await getPublishedBlogBySlug(slug);
+        
+        // Debug: Log the content to see what's coming from the API
+        console.log("Raw content from API:", response.data.content);
+        
         setBlog(response.data);
         
         // Fetch related posts if category exists
@@ -48,23 +142,6 @@ const BlogDetailsPage = () => {
     fetchBlog();
   }, [slug]);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
-
-  const calculateReadTime = (content) => {
-    if (!content) return "3 min read";
-    const wordsPerMinute = 200;
-    const words = content.replace(/<[^>]*>/g, '').trim().split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center py-12">
@@ -76,7 +153,7 @@ const BlogDetailsPage = () => {
   if (serverError) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {serverError}
           </div>
@@ -102,9 +179,9 @@ const BlogDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Hero Section */}
+      {/* Hero Section with Cover Image Left and Content Right */}
       <div className="bg-gradient-to-br from-white via-blue-50 to-[#95BDCB]/20 py-12 border-b border-[#95BDCB]/30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             to="/blog"
             className="inline-flex items-center text-sm font-medium text-[#3BC0E9] hover:underline mb-6"
@@ -114,130 +191,177 @@ const BlogDetailsPage = () => {
             </svg>
             Back to Blog
           </Link>
-          
-          <div className="text-center">
-            {blog.category && (
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#3BC0E9]/10 border border-[#3BC0E9]/20 mb-4">
-                <span className="w-2 h-2 rounded-full bg-[#3BC0E9] mr-2"></span>
-                <span className="text-xs font-medium text-[#242B38] uppercase tracking-wider">
-                  {blog.category.replace(/-/g, ' ')}
-                </span>
+
+          {/* Split Layout: Image Left, Content Right on Desktop */}
+          <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12">
+            {/* Cover Image - Left Side */}
+            <div className="lg:w-1/2">
+              <div className="rounded-2xl overflow-hidden shadow-xl">
+                {blog?.coverImage?.url ? (
+                  <img
+                    src={blog.coverImage.url}
+                    alt={blog.title}
+                    className="w-full h-auto object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                    <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                )}
               </div>
-            )}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#242B38] mb-4 leading-tight">
-              {blog.title}
-            </h1>
-            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500">
-              <span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
-              <span>•</span>
-              <span>{calculateReadTime(blog.content)}</span>
-              {blog.author && (
-                <>
-                  <span>•</span>
-                  <span>By {blog.author.fullName || blog.author}</span>
-                </>
+            </div>
+
+            {/* Content - Right Side */}
+            <div className="lg:w-1/2 text-center lg:text-left">
+              {blog.category && (
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#3BC0E9]/10 border border-[#3BC0E9]/20 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-[#3BC0E9] mr-2"></span>
+                  <span className="text-xs font-medium text-[#242B38] uppercase tracking-wider">
+                    {blog.category.replace(/-/g, ' ')}
+                  </span>
+                </div>
+              )}
+              <h1 className="text-2xl text-start md:text-4xl lg:text-5xl font-bold text-[#242B38] mb-4 leading-tight">
+                {blog.title}
+              </h1>
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-gray-500">
+                <span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
+                <span>•</span>
+                <span>{calculateReadTime(blog.content)}</span>
+                {blog.author && (
+                  <>
+                    <span>•</span>
+                    <span>By {blog.author.fullName || blog.author}</span>
+                  </>
+                )}
+              </div>
+              {blog.excerpt && (
+                <p className="mt-4 text-gray-600 text-start leading-relaxed">
+                  {blog.excerpt}
+                </p>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Featured Image */}
-        <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
-          {blog?.coverImage?.url ? (
-            <img
-              src={blog.coverImage.url}
-              alt={blog.title}
-              className="w-full h-auto object-cover"
-            />
-          ) : (
-            <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-          )}
-        </div>
+      {/* Main Content with Table of Contents */}
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main Content - Left Side on Desktop */}
+          <div className="lg:w-2/3">
+            <article className="shadow-sm overflow-hidden">
+              <div className="p-3 md:p-4">
+                <div className="prose prose-lg max-w-none">
+                  {blog.content ? (
+                    <div 
+                      className="blog-content text-gray-700 leading-relaxed"
+                      dangerouslySetInnerHTML={createMarkup(blog.content)}
+                    />
+                  ) : (
+                    <p className="text-gray-500 italic">No content available.</p>
+                  )}
+                </div>
+              </div>
 
-        {/* Article Content */}
-        <article className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-          {/* Excerpt */}
-          {blog.excerpt && (
-            <div className="p-6 md:p-8 border-b border-gray-200 bg-gradient-to-r from-blue-50/30 to-white">
-              <p className="text-lg text-gray-700 italic leading-relaxed">
-                {blog.excerpt}
-              </p>
-            </div>
-          )}
-
-          {/* Main Content */}
-          <div className="p-6 md:p-8">
-            <div className="prose prose-lg max-w-none prose-headings:text-[#242B38] prose-a:text-[#3BC0E9] prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-md">
-              {blog.content ? (
-                <div 
-                  className="blog-content text-gray-700 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: blog.content }}
-                />
-              ) : (
-                <p className="text-gray-500 italic">No content available.</p>
+              {/* Author Section */}
+              {blog.author && (
+                <div className="p-6 md:p-8 border-t border-gray-200 bg-gray-50">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#3BC0E9] to-[#95BDCB] flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">
+                        {blog.author.fullName?.charAt(0).toUpperCase() || blog.author?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[#242B38]">
+                        {blog.author.fullName || blog.author}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {blog.author.bio || "Content contributor at SubletMatch"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               )}
+            </article>
+
+            {/* Share Section */}
+            <div className="mt-8 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+              <h3 className="text-lg font-semibold text-[#242B38] mb-4">Share this article</h3>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(blog.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
+                  className="p-2 bg-gray-100 hover:bg-[#3BC0E9]/10 rounded-lg transition-colors"
+                  aria-label="Share on Twitter"
+                >
+                  <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={() => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(blog.title)}`, '_blank')}
+                  className="p-2 bg-gray-100 hover:bg-[#3BC0E9]/10 rounded-lg transition-colors"
+                  aria-label="Share on LinkedIn"
+                >
+                  <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={() => navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!'))}
+                  className="p-2 bg-gray-100 hover:bg-[#3BC0E9]/10 rounded-lg transition-colors"
+                  aria-label="Copy link"
+                >
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Author Section */}
-          {blog.author && (
-            <div className="p-6 md:p-8 border-t border-gray-200 bg-gray-50">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#3BC0E9] to-[#95BDCB] flex items-center justify-center">
-                  <span className="text-white text-lg font-bold">
-                    {blog.author.fullName?.charAt(0).toUpperCase() || blog.author?.charAt(0).toUpperCase()}
-                  </span>
+          {/* Table of Contents - Right Side on Desktop */}
+          <div className="lg:w-1/3">
+            <div className="sticky top-24">
+              {tableOfContents.length > 0 && (
+                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-[#242B38] mb-4 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-[#3BC0E9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    Table of Contents
+                  </h3>
+                  <nav className="space-y-2">
+                    {tableOfContents.map((heading, index) => (
+                      <button
+                        key={index}
+                        onClick={() => scrollToHeading(heading.id)}
+                        className={`block w-full text-left text-sm transition-colors hover:text-[#3BC0E9] ${
+                          activeHeading === heading.id
+                            ? 'text-[#3BC0E9] font-medium border-l-2 border-[#3BC0E9] pl-3'
+                            : 'text-gray-600 pl-3 hover:pl-4'
+                        }`}
+                        style={{ paddingLeft: `${(heading.level - 1) * 12}px` }}
+                      >
+                        {heading.text}
+                      </button>
+                    ))}
+                  </nav>
                 </div>
-                <div>
-                  <p className="font-semibold text-[#242B38]">
-                    {blog.author.fullName || blog.author}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {blog.author.bio || "Content contributor at SubletMatch"}
-                  </p>
-                </div>
+              )}
+
+              {/* Newsletter Signup in Sidebar */}
+              <div className="mt-6">
+                <NewsletterSignup
+                  title="Get weekly updates"
+                  description="Subscribe for new blog posts and housing insights."
+                  compact={true}
+                />
               </div>
             </div>
-          )}
-        </article>
-
-        {/* Share Section */}
-        <div className="mt-8 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <h3 className="text-lg font-semibold text-[#242B38] mb-4">Share this article</h3>
-          <div className="flex gap-3">
-            <button
-              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(blog.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
-              className="p-2 bg-gray-100 hover:bg-[#3BC0E9]/10 rounded-lg transition-colors"
-              aria-label="Share on Twitter"
-            >
-              <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-              </svg>
-            </button>
-            <button
-              onClick={() => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(blog.title)}`, '_blank')}
-              className="p-2 bg-gray-100 hover:bg-[#3BC0E9]/10 rounded-lg transition-colors"
-              aria-label="Share on LinkedIn"
-            >
-              <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-              </svg>
-            </button>
-            <button
-              onClick={() => navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!'))}
-              className="p-2 bg-gray-100 hover:bg-[#3BC0E9]/10 rounded-lg transition-colors"
-              aria-label="Copy link"
-            >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
           </div>
         </div>
 
@@ -280,14 +404,6 @@ const BlogDetailsPage = () => {
             </div>
           </div>
         )}
-
-        {/* Newsletter Signup */}
-        <div className="mt-12">
-          <NewsletterSignup
-            title="Want more content like this?"
-            description="Subscribe and get updates when new blog posts go live."
-          />
-        </div>
       </div>
 
       {/* Custom styles for blog content */}
@@ -295,6 +411,9 @@ const BlogDetailsPage = () => {
         .blog-content {
           font-size: 1.125rem;
           line-height: 1.75;
+        }
+        .blog-content h1, .blog-content h2, .blog-content h3 {
+          scroll-margin-top: 80px;
         }
         .blog-content h1 {
           font-size: 2rem;

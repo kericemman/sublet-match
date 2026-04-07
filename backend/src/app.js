@@ -17,6 +17,7 @@ const adminRoutes = require("./modules/admin/admin.routes");
 const uploadRoutes = require("./modules/uploads/upload.routes");
 const contactRoutes = require("./modules/contacts/contact.routes");
 const supportRoutes = require("./modules/support/support.routes");
+const feedbackRoutes = require("./modules/feedback/feedback.routes");
 
 const env = require("./config/env");
 
@@ -66,6 +67,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

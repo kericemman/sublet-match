@@ -64,7 +64,7 @@ const LandlordRegisterPage = () => {
                 </div>
               </div>
 
-              <GoogleLoginButton
+              {/* <GoogleLoginButton
                 onSuccessRedirect={handleRedirect}
                 onError={setGoogleError}
               />
@@ -73,7 +73,7 @@ const LandlordRegisterPage = () => {
                 <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   {googleError}
                 </div>
-              )}
+              )} */}
 
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600">

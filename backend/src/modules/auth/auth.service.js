@@ -70,69 +70,62 @@ const loginLandlord = async (payload) => {
 };
 
 const loginWithGoogle = async (googleToken) => {
-  if (!env.googleClientId) {
-    throw new ApiError(500, "Google auth is not configured");
-  }
-
-  const ticket = await googleClient.verifyIdToken({
-    idToken: googleToken,
-    audience: env.googleClientId,
-  });
-
-  const payload = ticket.getPayload();
-
-  if (!payload || !payload.email) {
-    throw new ApiError(401, "Invalid Google token");
-  }
-
-  const email = payload.email.toLowerCase().trim();
-  const fullName = payload.name || "Google User";
-  const googleId = payload.sub;
-  const emailVerified = payload.email_verified;
-
-  let user = await User.findOne({ email });
-
-  if (user) {
-    if (user.isBanned) {
-      throw new ApiError(403, "Your account has been banned");
+  try {
+    if (!env.googleClientId) {
+      throw new ApiError(500, "Google auth is not configured");
     }
 
-    if (user.role !== "landlord") {
-      throw new ApiError(403, "This Google account cannot access landlord login");
+    const ticket = await googleClient.verifyIdToken({
+      idToken: googleToken,
+      audience: env.googleClientId,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload || !payload.email) {
+      throw new ApiError(401, "Invalid Google token");
     }
 
-    if (!user.googleId) {
+    const email = payload.email.toLowerCase().trim();
+    const fullName = payload.name || "Google User";
+    const googleId = payload.sub;
+    const emailVerified = payload.email_verified;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      if (user.isBanned) {
+        throw new ApiError(403, "Your account has been banned");
+      }
+
+      if (user.role !== "landlord") {
+        throw new ApiError(403, "This Google account cannot access landlord login");
+      }
+
       user.googleId = googleId;
-    }
-
-    if (user.authProvider !== "google") {
       user.authProvider = "google";
+      user.isVerified = !!emailVerified || user.isVerified;
+      user.fullName = user.fullName || fullName;
+
+      await user.save();
+      return formatAuthResponse(user);
     }
 
-    if (emailVerified) {
-      user.isVerified = true;
-    }
-
-    if (!user.fullName && fullName) {
-      user.fullName = fullName;
-    }
-
-    await user.save();
+    user = await User.create({
+      fullName,
+      email,
+      googleId,
+      role: "landlord",
+      authProvider: "google",
+      isVerified: !!emailVerified,
+      password: null,
+    });
 
     return formatAuthResponse(user);
+  } catch (error) {
+    console.error("GOOGLE LOGIN ERROR:", error.message);
+    throw new ApiError(400, error.message || "Google authentication failed");
   }
-
-  user = await User.create({
-    fullName,
-    email,
-    googleId,
-    role: "landlord",
-    authProvider: "google",
-    isVerified: !!emailVerified,
-    password: null,
-  });
-
-  return formatAuthResponse(user);
 };
 
 const forgotPassword = async (email) => {

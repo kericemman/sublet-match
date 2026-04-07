@@ -228,7 +228,7 @@ const ListingForm = ({
               className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-[#3BC0E9] focus:border-transparent"
             >
               <option value="landlord">Landlord</option>
-              <option value="private_lister">Private Lister</option>
+              <option value="private_lister">Tenant</option>
             </select>
           </div>
 
@@ -335,7 +335,7 @@ const ListingForm = ({
                 onChange={() => handleTagToggle(tag)}
                 className="w-4 h-4 text-[#3BC0E9] rounded"
               />
-              {tag.replace(/_/g, ' ').toUpperCase()}
+              {/* {tag.replace(/_/g, ' ').toUpperCase()} */}
             </label>
           ))}
         </div>

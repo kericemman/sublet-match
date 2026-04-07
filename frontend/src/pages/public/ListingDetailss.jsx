@@ -5,9 +5,10 @@ import Loader from "../../components/common/Loader";
 import InquiryForm from "../../components/inquiries/InquiryForm";
 
 const ListingDetailsPage = () => {
-    useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [activeImage, setActiveImage] = useState("");
@@ -51,6 +52,39 @@ const ListingDetailsPage = () => {
 
   const handleCallClick = () => {
     setShowPhone(true);
+  };
+
+  // Function to get color for lifestyle tags
+  const getLifestyleTagColor = (tag) => {
+    const colorMap = {
+      'sober': 'bg-emerald-100 text-emerald-800',
+      'bipoc': 'bg-amber-100 text-amber-800',
+      'lgbtq_friendly': 'bg-rose-100 text-rose-800',
+      'students': 'bg-indigo-100 text-indigo-800',
+      'professionals': 'bg-slate-100 text-slate-800',
+      'families': 'bg-orange-100 text-orange-800',
+    };
+    return colorMap[tag] || 'bg-gray-100 text-gray-700';
+  };
+
+  // Function to get color for property type
+  const getPropertyTypeColor = (type) => {
+    const colorMap = {
+      'apartment': 'bg-blue-100 text-blue-800',
+      'studio': 'bg-purple-100 text-purple-800',
+      'shared_room': 'bg-cyan-100 text-cyan-800',
+      'private_room': 'bg-teal-100 text-teal-800',
+      'house': 'bg-amber-100 text-amber-800',
+      'other': 'bg-gray-100 text-gray-700',
+    };
+    return colorMap[type] || 'bg-gray-100 text-gray-700';
+  };
+
+  // Function to get color for listed by type
+  const getListedByColor = (type) => {
+    return type === "landlord" 
+      ? "bg-blue-100 text-blue-800" 
+      : "bg-green-100 text-green-800";
   };
 
   if (loading) {
@@ -196,28 +230,27 @@ const ListingDetailsPage = () => {
                 </div>
               </div>
 
-              {/* Tags */}
+              {/* Tags with different colors */}
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-                  listing.listedBy === "landlord" 
-                    ? "bg-blue-100 text-blue-800" 
-                    : "bg-green-100 text-green-800"
-                }`}>
+                {/* Listed By Tag */}
+                <span className={`rounded-full px-3 py-1 text-xs font-medium ${getListedByColor(listing.listedBy)}`}>
                   {listing.listedBy === "landlord" ? "Posted by Landlord" : "Private Lister"}
                 </span>
 
+                {/* Property Type Tag */}
                 {listing.propertyType && (
-                  <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 capitalize">
+                  <span className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${getPropertyTypeColor(listing.propertyType)}`}>
                     {listing.propertyType.replace(/_/g, ' ')}
                   </span>
                 )}
 
+                {/* Lifestyle Tags with different colors */}
                 {listing.lifestyleTags?.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700"
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${getLifestyleTagColor(tag)}`}
                   >
-                    {tag.toUpperCase()}
+                    {tag.replace(/_/g, ' ').toUpperCase()}
                   </span>
                 ))}
               </div>

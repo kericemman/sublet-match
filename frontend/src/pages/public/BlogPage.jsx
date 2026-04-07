@@ -98,7 +98,7 @@ const BlogPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Search and Filters */}
         <div className="mb-8 space-y-6">
           {/* Search Bar */}
@@ -336,6 +336,16 @@ const BlogPage = () => {
             description="Subscribe for practical updates, platform news, and helpful articles."
           />
         </div>
+
+        <Link
+          to="/feedback"
+          className="mt-12 inline-flex items-center text-sm font-medium text-[#3BC0E9] hover:translate-x-1 transition-transform"
+        >
+          Share your feedback
+          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
       </div>
     </div>
   );

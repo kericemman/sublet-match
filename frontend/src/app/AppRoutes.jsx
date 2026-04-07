@@ -31,7 +31,6 @@ import ManageInquiriesPage from "../pages/admin/ManageInquiries";
 import ManageListingsPage from "../pages/admin/ManageListing";
 import ManageLandlordsPage from "../pages/admin/ManageLandlord";
 import BlogPage from "../pages/public/BlogPage";
-import BlogDetailsPage from "../pages/public/BlogDetails";
 import TermsOfService from "../pages/public/Terms";
 import SafetyTips from "../pages/public/Safety";
 import AboutPage from "../pages/public/About";
@@ -43,6 +42,9 @@ import ManageSupportPage from "../pages/admin/AdminSupport";
 import SupportTicketAdminPage from "../pages/admin/AdminSupportTicket";
 import ForgotPasswordPage from "../pages/public/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/public/ResetPasswordPage";
+import BlogDetailsPage from "../pages/public/BlogDetails";
+import ManageFeedbackPage from "../pages/admin/Adminfeedback";
+import FeedbackPage from "../pages/public/Feedback";
 
 
 const ProtectedLandlordRoute = ({ children }) => {
@@ -82,6 +84,7 @@ const AppRoutes = () => {
         <Route path="/contact" element={<ContactPage />}/>
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
       
       </Route>
 
@@ -124,7 +127,8 @@ const AppRoutes = () => {
         <Route path="newsletters" element={<ManageNewsletterPage />} />
         <Route path="contacts" element={<ManageContactsPage />} />
         <Route path="admin-support" element={<ManageSupportPage />} />
-        <Route path="admin-support/:id" element={<SupportTicketAdminPage />} />"
+        <Route path="admin-support/:id" element={<SupportTicketAdminPage />} />
+        <Route path="feedback" element={<ManageFeedbackPage/>}/>
         
       </Route>
 

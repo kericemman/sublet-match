@@ -21,8 +21,21 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+// const googleLogin = catchAsync(async (req, res) => {
+//   const result = await authService.loginWithGoogle(req.body.token);
+
+//   res.status(200).json({
+//     success: true,
+//     message: "Google authentication successful",
+//     data: result,
+//   });
+// });
+
 const googleLogin = catchAsync(async (req, res) => {
-  const result = await authService.loginWithGoogle(req.body.token);
+  const googleToken = req.body.token;
+
+
+  const result = await authService.loginWithGoogle(googleToken);
 
   res.status(200).json({
     success: true,

@@ -108,26 +108,7 @@ const MyListings = () => {
       </div>
 
       {/* Stats Summary */}
-      {listings.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-3 text-center">
-            <p className="text-2xl font-bold text-[#242B38]">{listings.filter(l => l.status === 'approved').length}</p>
-            <p className="text-xs text-gray-500">Active</p>
-          </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-3 text-center">
-            <p className="text-2xl font-bold text-yellow-600">{listings.filter(l => l.status === 'pending').length}</p>
-            <p className="text-xs text-gray-500">Pending</p>
-          </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-3 text-center">
-            <p className="text-2xl font-bold text-red-600">{listings.filter(l => l.status === 'rejected').length}</p>
-            <p className="text-xs text-gray-500">Rejected</p>
-          </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-3 text-center">
-            <p className="text-2xl font-bold text-[#3BC0E9]">{listings.reduce((sum, l) => sum + (l.views || 0), 0)}</p>
-            <p className="text-xs text-gray-500">Total Views</p>
-          </div>
-        </div>
-      )}
+      
 
       {/* Listings Grid */}
       {!listings.length ? (

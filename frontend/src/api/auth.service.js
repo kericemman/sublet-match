@@ -10,6 +10,7 @@ export const loginLandlord = async (payload) => {
   return data;
 };
 
+
 export const loginWithGoogle = async (token) => {
   const { data } = await api.post("/auth/google", { token });
   return data;

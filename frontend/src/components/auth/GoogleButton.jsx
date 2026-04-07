@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { loginWithGoogle } from "../../api/auth.service";
 import useAuth from "../../hooks/useAuth";
 
-const GoogleLoginButton = ({ onSuccessRedirect, onError, buttonText = "Continue with Google", className = "" }) => {
+const GoogleLoginButton = ({ onSuccessRedirect, onError }) => {
   const { setAuthSession } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       setLoading(true);
+
       const googleToken = credentialResponse.credential;
 
       if (!googleToken) {
@@ -28,28 +29,19 @@ const GoogleLoginButton = ({ onSuccessRedirect, onError, buttonText = "Continue 
       const message =
         error?.response?.data?.message || error.message || "Google login failed";
 
-      if (onError) {
-        onError(message);
-      }
+      if (onError) onError(message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className="w-full">
       <GoogleLogin
         onSuccess={handleGoogleSuccess}
-        onError={() => {
-          if (onError) onError("Google sign-in failed. Please try again.");
-        }}
-        theme="outline"
-        size="large"
-        shape="rectangular"
-        width="100%"
-        text="continue_with"
-        logo_alignment="center"
+        onError={() => onError?.("Google sign-in failed")}
       />
+      {loading ? <p className="mt-2 text-sm text-gray-500">Signing in...</p> : null}
     </div>
   );
 };

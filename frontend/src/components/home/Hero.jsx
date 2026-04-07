@@ -14,7 +14,6 @@ const Hero = () => {
           limit: 4,
           sort: "newest"
         });
-        // Get approved listings from the response
         const allListings = response.data.listings || [];
         setListings(allListings);
       } catch (error) {
@@ -57,72 +56,12 @@ const Hero = () => {
       ></div>
 
       <div className="relative z-10 max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        {/* Mobile: Listings First, Content Second */}
+        {/* Desktop: Content First, Listings Second */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           
-          {/* Left Column - Content */}
-          <div className="text-center lg:text-left space-y-6">
-            {/* Badge */}
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <span className="w-2 h-2 rounded-full bg-[#3BC0E9] mr-2 animate-pulse"></span>
-              <span className="text-xs font-medium text-white/90 uppercase tracking-wider">
-               Join Us Today
-              </span>
-            </div>
-
-            {/* Main Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
-              Find Your Perfect{' '}
-              <span className="bg-gradient-to-r from-[#3BC0E9] to-[#95BDCB] bg-clip-text text-transparent">
-                Short-Term Home
-              </span>
-            </h1>
-
-            {/* Description */}
-            <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Built for interns and youg professionals moving to NYC. Find short-term housing without hustle. Choose from a variety of listings and book your stay in minutes.
-            </p>
-
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-6 pt-2">
-              <div>
-                
-                <p className="text-xs text-white/60">Verified Properties</p>
-              </div>
-              <div>
-                
-                <p className="text-xs text-white/60">Happy Renters</p>
-              </div>
-              <div>
-                
-                <p className="text-xs text-white/60">New York</p>
-              </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
-              <Link
-                to="/listings"
-                className="group relative px-8 py-3 bg-gradient-to-r from-[#3BC0E9] to-[#95BDCB] text-white rounded-lg font-medium hover:shadow-lg hover:shadow-[#3BC0E9]/20 transition-all duration-300 hover:scale-105"
-              >
-                <span className="relative z-10 flex items-center justify-center">
-                  Browse Listings
-                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </span>
-              </Link>
-
-              <Link
-                to="/register"
-                className="px-8 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-lg font-medium hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
-              >
-                Post Apartment Now
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Column - Featured Listings */}
-          <div className="mt-8 lg:mt-0">
+          {/* Right Column - Featured Listings (Shows first on mobile) */}
+          <div className="order-first lg:order-last mt-0 lg:mt-8">
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white font-semibold">Latest Listings</h3>
@@ -201,16 +140,69 @@ const Hero = () => {
               )}
             </div>
           </div>
+
+          {/* Left Column - Content (Shows second on mobile) */}
+          <div className="order-last lg:order-first text-center lg:text-left space-y-6">
+            {/* Badge */}
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+              <span className="w-2 h-2 rounded-full bg-[#3BC0E9] mr-2 animate-pulse"></span>
+              <span className="text-xs font-medium text-white/90 uppercase tracking-wider">
+                Join Us Today
+              </span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="text-2xl sm:text-4xl text-start md:text-start lg:text-start lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
+              Find Your Perfect{' '}
+              <span className="bg-gradient-to-r from-[#3BC0E9] to-[#95BDCB] bg-clip-text text-transparent">
+                Short-Term Home
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p className="text-base sm:text-lg text-start text-white/80 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              Built for interns and young professionals moving to NYC. Find short-term housing without hustle. Choose from a variety of listings and book your stay in minutes.
+            </p>
+
+            {/* Stats */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-6 pt-2">
+              <div>
+                <p className="text-xs text-white/60">Verified Properties</p>
+              </div>
+              <div>
+                <p className="text-xs text-white/60">Happy Renters</p>
+              </div>
+              <div>
+                <p className="text-xs text-white/60">New York</p>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+              <Link
+                to="/listings"
+                className="group relative px-8 py-3 bg-gradient-to-r from-[#3BC0E9] to-[#95BDCB] text-white rounded-lg font-medium hover:shadow-lg hover:shadow-[#3BC0E9]/20 transition-all duration-300 hover:scale-105"
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  Browse Listings
+                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+              </Link>
+
+              <Link
+                to="/register"
+                className="px-8 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-lg font-medium hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
+              >
+                Post Apartment Now
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden md:block">
-        <div className="flex flex-col items-center">
-          <span className="text-white/40 text-xs mb-2">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-[#3BC0E9] to-transparent"></div>
-        </div>
-      </div>
+      
 
       <style jsx>{`
         @keyframes blob {

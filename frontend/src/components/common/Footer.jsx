@@ -42,6 +42,13 @@ const Footer = () => {
                   Safety Tips
                 </Link>
               </li>
+
+
+              <li>
+                <Link to="/feedback" className="text-white/60 hover:text-white transition-colors text-sm">
+                  Submit Feedback
+                </Link>
+              </li>
              
             </ul>
           </div>
