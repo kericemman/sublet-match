@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { loginLandlord } from "../../api/auth.service";
 import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import GoogleLoginButton from "./GoogleButton";
 
 const LoginForm = ({ onSuccessRedirect }) => {
   const { setAuthSession } = useAuth();
@@ -184,6 +185,8 @@ const LoginForm = ({ onSuccessRedirect }) => {
           </Link>
         </p>
       </div>
+
+      <GoogleLoginButton/>
     </form>
   );
 };

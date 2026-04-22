@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://subletmatch.com',
+        target: 'http://localhost:5173',
         changeOrigin: true,
         secure: false,
       },

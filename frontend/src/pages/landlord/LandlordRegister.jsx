@@ -90,12 +90,8 @@ const LandlordRegisterPage = () => {
               {/* Terms */}
               <p className="mt-6 text-xs text-center text-gray-500">
                 By creating an account, you agree to our{' '}
-                <Link to="/terms" className="text-[#3BC0E9] hover:underline">
+                <Link to="/terms-of-service" className="text-[#3BC0E9] hover:underline">
                   Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link to="/privacy" className="text-[#3BC0E9] hover:underline">
-                  Privacy Policy
                 </Link>
               </p>
             </div>
