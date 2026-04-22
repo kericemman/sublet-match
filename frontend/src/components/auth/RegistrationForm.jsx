@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { registerLandlord } from "../../api/auth.service";
 import useAuth from "../../hooks/useAuth";
+import GoogleLoginButton from "./GoogleButton";
 
 const RegisterForm = ({ onSuccessRedirect }) => {
   const { setAuthSession } = useAuth();
@@ -257,6 +258,8 @@ const RegisterForm = ({ onSuccessRedirect }) => {
           
         </label>
       </div>
+
+      
       {errors.terms && (
         <p className="mt-1 text-sm text-red-600">{errors.terms.message}</p>
       )}
@@ -267,6 +270,8 @@ const RegisterForm = ({ onSuccessRedirect }) => {
           {serverError}
         </div>
       )}
+
+    
 
       {/* Submit Button */}
       <button
@@ -286,6 +291,9 @@ const RegisterForm = ({ onSuccessRedirect }) => {
           "Create Account"
         )}
       </button>
+
+        <GoogleLoginButton/>
+
     </form>
   );
 };
