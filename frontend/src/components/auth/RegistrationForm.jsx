@@ -292,7 +292,7 @@ const RegisterForm = ({ onSuccessRedirect }) => {
         )}
       </button>
 
-        <GoogleLoginButton/>
+      
 
     </form>
   );

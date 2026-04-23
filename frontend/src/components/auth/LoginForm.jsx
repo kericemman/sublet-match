@@ -186,7 +186,7 @@ const LoginForm = ({ onSuccessRedirect }) => {
         </p>
       </div>
 
-      <GoogleLoginButton/>
+    
     </form>
   );
 };

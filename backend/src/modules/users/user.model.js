@@ -1,5 +1,3 @@
-
-
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -45,7 +43,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
     passwordResetToken: {
       type: String,
       default: null,
@@ -59,7 +56,12 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function () {
-  if (!this.isModified("password")) return;
+  if (!this.isModified("password") || !this.password) return;
+
+  if (typeof this.password !== "string") {
+    throw new Error("Password must be a string before hashing");
+  }
+
   this.password = await bcrypt.hash(this.password, 10);
 });
 

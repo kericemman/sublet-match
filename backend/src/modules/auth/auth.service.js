@@ -70,10 +70,19 @@ const loginLandlord = async (payload) => {
 };
 
 const loginWithGoogle = async (googleToken) => {
+  // try {
+  //   if (!env.googleClientId) {
+  //     throw new ApiError(500, "Google auth is not configured");
+  //   }
+
   try {
-    if (!env.googleClientId) {
-      throw new ApiError(500, "Google auth is not configured");
-    }
+    // 👇 ADD THIS BLOCK
+    const payloadPreview = JSON.parse(
+      Buffer.from(googleToken.split(".")[1], "base64").toString()
+    );
+
+    console.log("TOKEN AUD:", payloadPreview.aud);
+    console.log("EXPECTED AUD:", env.googleClientId);
 
     const ticket = await googleClient.verifyIdToken({
       idToken: googleToken,
